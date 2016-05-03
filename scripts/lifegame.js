@@ -58,10 +58,12 @@ Grid.prototype.set = function(vector, value) {
 
 // Grid tests
 
-// result: undefined
+// Test 1
+// Result: undefined
 var grid = new Grid(5, 5);
 console.log(grid.get(new Vector(1, 1)));
 
-// result 'X'
+// Test 2
+// Result: X
 grid.set(new Vector(1, 1), "X");
 console.log(grid.get(new Vector(1, 1)));
