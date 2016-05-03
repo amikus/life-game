@@ -41,7 +41,7 @@ function Grid (width, height) {
 }
 
 // determines whether Vector is within boundaires of Grid
-Grid.prototype.isInside function(vector) {
+Grid.prototype.isInside = function(vector) {
     return vector.x >= 0 && vector.x < this.width &&
            vector.y >= 0 && vector.y < this.height;
 };
