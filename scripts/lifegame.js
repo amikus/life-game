@@ -1,5 +1,7 @@
 console.log("This will be a game of life.");
 
+
+
 /*********/
 /* World */
 /*********/
@@ -115,6 +117,7 @@ Grid.prototype.set = function(vector, value) {
     this.space[vector.x + this.width * vector.y] = value;
 };
 
+/*
 // Grid tests
 
 // Test 1
@@ -126,6 +129,7 @@ console.log(grid.get(new Vector(1, 1)));
 // Result: X
 grid.set(new Vector(1, 1), "X");
 console.log(grid.get(new Vector(1, 1)));
+*/
 
 /********/
 /* Wall */
@@ -179,4 +183,14 @@ BouncingCritter.prototype.act = function(view) {
     
     return {type: "Move", direction: this.direction};
 };
+
+/***************/
+/* The Program */
+/***************/
+
+var world = new World(plan,
+                     {"#": Wall,
+                      "o": BouncingCritter});
+
+console.log(world.toString());
 
