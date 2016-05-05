@@ -4,6 +4,7 @@ console.log("This will be a game of life.");
 /* World */
 /*********/
 
+// the game world layout
 var plan =
     ["############################",
      "#      #    #      o      ##",
@@ -17,6 +18,64 @@ var plan =
      "# o  #         o       ### #",
      "#    #                     #",
      "############################"];
+
+function elementFromChar(legend, ch) {
+    // empty string is null
+    if (ch == " ")
+        return null;
+    
+    // otherwise, instantiate correct element by lookin up 
+    // character's constructor and applying new to it
+    var element = new legend[ch]();
+    
+    // to help with lookup of originating char using charFromElement
+    element.originChar = ch;
+    
+    return element;
+}
+
+function charFromElement(element) {
+    if (element == null)
+        return " ";
+    else
+        return element.originChar;
+}
+
+function World(map, legend) {
+    var grid = new Grid(map[0].length, map.length);
+    this.grid = grid;
+    this.legend = legend;
+    
+    map.forEach(function(line, y) {
+        for (var x = 0; x < line.length; x++) {
+            grid.set(new Vector(x, y), elementFromChar(legend, line[x]));
+        }
+    });
+}
+
+/*
+Desc:       Displays World object as string
+
+Requires:   NA
+Result:     Returns output String representing game grid
+*/
+World.prototype.toString = function() {
+    
+    var output = "";
+    
+    for (var y = 0; y < this.grid.height; y++) {
+        for (var x = 0; x < this.grid.width; x++) {
+            var element = this.grid.get(new Vector(x, y));
+            output += charFromElement(element);
+        }
+        output += "\n";
+    }
+    
+    return output;
+}
+/**********/
+/* Vector */
+/**********/
 
 // Vector is used to represent coordinate pairs
 function Vector(x, y) {
@@ -68,9 +127,14 @@ console.log(grid.get(new Vector(1, 1)));
 grid.set(new Vector(1, 1), "X");
 console.log(grid.get(new Vector(1, 1)));
 
-/**********/
-/*Critters*/
-/**********/
+/********/
+/* Wall */
+/********/
+function Wall() {}
+
+/***********/
+/* Critter */
+/***********/
 
 // the 8 squares surrounding a critter
 var directions = {
