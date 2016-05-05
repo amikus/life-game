@@ -83,3 +83,36 @@ var directions = {
     "w": new Vector(-1, 0),
     "nw": new Vector(-1, -1)
 };
+
+// returns random element in array
+function randomElement(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+// splits direction names into an array
+var directionNames = "n ne e se s sw w nw".split(" ");
+
+// simple critter that bounces off of obstacles
+function BouncingCritter() {
+    this.direct = randomElement(directionNames);
+}
+
+/*
+Desc:       Critter uses View object that is passed to it to find an
+            empty space to move into
+
+Requires:   View object
+Result:     Returns an action, which is an object with a type property
+            that names the type of action a critter wants to take
+            May also return direction critter wants to move
+*/
+BouncingCritter.prototype.act = function(view) {
+    
+    // if current direction is not empty
+    if (view.look(this.direction) != " ")
+        // find the nearest empty space
+        this.direction = view.find(" ") || "s";
+    
+    return {type: "Move", direction: this.direction};
+};
+
