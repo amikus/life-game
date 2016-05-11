@@ -77,7 +77,75 @@ World.prototype.toString = function() {
     }
     
     return output;
-}
+};
+
+/*
+Desc:       Creates turn system to allow critters to act
+            within the World
+Requires:   NA
+Result:     In succession, each critter takes one action
+*/
+World.prototype.turn = function() {
+    // for tracking critters that have already acted
+    var acted = [];
+    
+    this.grid.forEach(function(critter, vector) {
+        
+        // if a critter can act and hasn't already acted this turn
+        if (critter.act && acted.indexOf(critter) == -1) {
+            // add critter to the acted array
+            acted.push(critter);
+            // let critter act
+            this.letAct(critter, vector);
+        }
+    }, this);
+};
+
+/*
+Desc:       Enables critter to take a single action
+Requires:   A Critter and a Vector object
+Result:     Critter takes a single action
+*/
+World.prototype.letAct = function(critter, vector) {
+    
+    // get an action from the critter
+    var action = critter.act(new View(this, vector));
+    
+    // if an action is found and it's a "move" type action
+    if (action && action.type == "move") {
+        
+        // get a valid destination for the critter
+        var dest = this.checkDestination(action, vector);
+        if (dest && this.grid.get(dest) == null) {
+            
+            //and move the critter to the location
+            this.grid.set(vector, null);
+            this.grid.set(dest, critter);
+        }
+    }
+};
+
+
+/*
+Desc:       Checks to see if intended critter destination is valid
+Requires:   A critter action and a Vector object
+Result:     Returns critter destination Vector if it is a valid
+            destination
+*/
+World.prototype.checkDestination = function(action, vector) {
+    
+    // if the direction array contains the direction specified
+    // by the object
+    if (directions.hasOwnProperty(action.direction)) {
+        
+        // determine whether or not the direction is a valid
+        // direction for the critter to move
+        var dest = vector.plus(directions[action.direction]);
+        if (this.grid.isInside(dest))
+            return dest;
+    }
+};
+
 /**********/
 /* Vector */
 /**********/
@@ -124,7 +192,8 @@ Grid.prototype.forEach = function(f, context) {
                 f.call(context, value, new Vector(x, y));
         }
     }
-}
+};
+
 // gets object located at given Vector
 Grid.prototype.get = function(vector) {
     return this.space[vector.x + this.width * vector.y];
@@ -181,7 +250,7 @@ var directionNames = "n ne e se s sw w nw".split(" ");
 // simple critter that bounces off of obstacles
 function BouncingCritter() {
     this.direct = randomElement(directionNames);
-}
+};
 
 /*
 Desc:       Critter uses View object that is passed to it to find an
