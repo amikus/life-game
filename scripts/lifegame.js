@@ -26,7 +26,7 @@ function elementFromChar(legend, ch) {
     if (ch == " ")
         return null;
     
-    // otherwise, instantiate correct element by lookin up 
+    // otherwise, instantiate correct element by looking up 
     // character's constructor and applying new to it
     var element = new legend[ch]();
     
@@ -48,6 +48,7 @@ function World(map, legend) {
     this.grid = grid;
     this.legend = legend;
     
+    
     map.forEach(function(line, y) {
         for (var x = 0; x < line.length; x++) {
             grid.set(new Vector(x, y), elementFromChar(legend, line[x]));
@@ -65,6 +66,8 @@ World.prototype.toString = function() {
     
     var output = "";
     
+    // scans through grid, line-by-line,
+    // producing one char for each element
     for (var y = 0; y < this.grid.height; y++) {
         for (var x = 0; x < this.grid.width; x++) {
             var element = this.grid.get(new Vector(x, y));
@@ -188,9 +191,11 @@ BouncingCritter.prototype.act = function(view) {
 /* The Program */
 /***************/
 
+// create the world
 var world = new World(plan,
                      {"#": Wall,
                       "o": BouncingCritter});
 
+//output the world
 console.log(world.toString());
 
