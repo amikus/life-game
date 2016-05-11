@@ -110,6 +110,21 @@ Grid.prototype.isInside = function(vector) {
            vector.y >= 0 && vector.y < this.height;
 };
 
+
+Grid.prototype.forEach = function(f, context) {
+    //scans through grid, line by line
+    for (var y = 0; y < this.height; y++) {
+        for (var x = 0; x < this.width; x++) {
+            
+            var value = this.space[x + y * this.width];
+            if (value != null)
+                
+                //calls function that was passed in for
+                //each element of the grid that isn't null/undefined
+                f.call(context, value, new Vector(x, y));
+        }
+    }
+}
 // gets object located at given Vector
 Grid.prototype.get = function(vector) {
     return this.space[vector.x + this.width * vector.y];
