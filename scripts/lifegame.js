@@ -354,6 +354,11 @@ var world = new World(plan,
                      {"#": Wall,
                       "o": BouncingCritter});
 
-//output the world
-console.log(world.toString());
+// output the world
+// 5 turns
+for (var i = 0; i < 5; i++) {
+    world.turn();
+    console.log(world.toString());
+}
+}
 
