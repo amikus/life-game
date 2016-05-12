@@ -271,6 +271,80 @@ BouncingCritter.prototype.act = function(view) {
     return {type: "Move", direction: this.direction};
 };
 
+/********/
+/* View */
+/********/
+
+/*
+Desc:       View constructor
+Requires:   World object, Vector object
+Result:     Creates instance of View object
+*/
+function View(world, vector) {
+    this.world = world;
+    this.vector = vector;
+}
+
+/*
+Desc:       Gather character stored in a space that is located
+            adjacent to critter in a specified direction
+Requires:   Direction critter is looking
+Result:     Returns character stored in specified direction
+*/
+View.prototype.look = function(dir) {
+    
+    // set target to space critter may act upon
+    var target = this.vector.plus(directions[dir]);
+    
+    // if target is a valid location within grid . . .
+    if (this.world.grid.isInside(target))
+        // . . . grab the char stored at that location
+        return charFromElement(this.world.grid.get(target));
+    else
+        // . . . otherwise return a wall
+        return "#";
+};
+
+/*
+Desc:       Finds all directions adjacent to critter in which a
+            particular character chan be found
+Requires:   Character to look for
+Result:     Returns array of directions in which critter can find
+            character of interest
+*/
+View.prototype.findAll = function(ch) {
+    // array for storing each direction in which ch can be found
+    var found = [];
+    
+    // look in each direction
+    for (var dir in directions)
+        // if direction has ch, store the direction in found array
+        if (this.look(dir) == ch)
+            found.push(dir);
+    
+    // return directional array
+    return found;
+};
+
+/*
+Desc:       Return a random direction adjacent to critter in which a
+            particular character can be found
+Requires:   Character to look for
+Result:     Returns random direction in which critter can find
+            character of interest
+*/
+View.prototype.find = function(ch) {
+    // store array of each direction in which ch can be found
+    var found = this.findAll(ch);
+    
+    // if ch cannot be found in any direction, return null
+    if (found.length == 0)
+        return null;
+    
+    // otherwise return a random direction from the found array
+    return randomElement(found);
+}
+
 /***************/
 /* The Program */
 /***************/
